@@ -107,5 +107,5 @@ file_data <-lapply(file_name, function(x)
 file_data<-data.table::rbindlist(file_data, fill = TRUE)
 
 #save file
-fwrite(file_data, "output\\TBN_occ.csv")
+fwrite(file_data, "output\\TBIA_occ.csv")
 ```
