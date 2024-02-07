@@ -23,9 +23,9 @@ splist <- c("t0032116", "t0085944")
 location <- ""
 #specific polygen
 location="120.018768 22.864787,120.018768 23.704895,121.002045 23.704895,121.002045 22.864787,120.018768 22.864787"
+
 #Taiwan polygen
 location="122.03063964843751 25.88687092463608,121.11877441406251 25.480936665268178,120.53649902343751 25.103476581724465,119.33898925781251 24.144717243892796,119.00939941406251 23.61228384938877,118.86657714843751 23.148410113700283,119.17419433593751 22.92598635988469,119.34997558593751 22.611950834736227,119.8663330078125 22.17516527187432,120.30578613281251 21.777833030006345,120.61340332031251 21.481664342451023,120.84411621093751 21.44076595964159,121.83288574218751 21.66556467586286,122.0086669921875 21.91040056141738,121.92077636718751 22.561232446329967,121.81091308593751 22.966454331427176,121.84387207031251 23.39063379029987,121.92077636718751 23.903886757544182,122.20642089843751 24.595051023918302,122.3272705078125 25.222801361656437,122.44812011718751 25.659321987762954,122.31628417968751 25.90663714205052,122.03063964843751 25.88687092463608"
-
 
 #set eventDate
 eventDate <- ""
@@ -41,9 +41,10 @@ total_progress <- progress_bar$new(total = length(splist),
 for(i in 1:length(splist)){
   dir.create(sprintf("output\\%s", splist[i]))
   tryCatch({
-    occ_url <- paste0("https://tbiadata.tw/api/v1/occurrence?taxonID=",
+    occ_url <- sprintf("https://tbiadata.tw/api/v1/occurrence?taxonID=%s&polygon=POLYGON%20((%s))&eventDate=%s&limit=1000&offset=0",
                        splist[i],
-                       "&limit=1000&offset=0"
+                       location,
+                       eventDate
     )
     while(TRUE) {
       tryCatch({
@@ -70,10 +71,11 @@ for(i in 1:length(splist)){
         offset<-1000*j
         while(TRUE) {
           tryCatch({
-            occ_url<-paste0("https://tbiadata.tw/api/v1/occurrence?taxonID=",
-                            splist[i],
-                            "&limit=1000&offset=",
-                            offset
+            occ_url <- sprintf("https://tbiadata.tw/api/v1/occurrence?taxonID=%s&polygon=POLYGON%20((%s))&eventDate=%s&limit=1000&offset=%s",
+                               splist[i],
+                               location,
+                               eventDate,
+                               offset
             )
             occ <- fromJSON(occ_url)
             break
